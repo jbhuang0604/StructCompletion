@@ -28,6 +28,7 @@ There are three main directories:
 - data: the folder for input images
 
 - external: external codes
+
 1. MeanShift: the Mean-shift clustering algorithm
 http://www.mathworks.com/matlabcentral/fileexchange/10161-mean-shift-clustering
 
