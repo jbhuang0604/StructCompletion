@@ -34,10 +34,10 @@ function imgCompletion = sc_complete(imgFileName, optA, optS)
     
 %% Temp input
 % rand('seed', 1);
-imgID = 46; 
+imgID = 5; 
 imgFileName = [num2str(imgID, '%03d'), '_input_hole.png'];
-addpath(genpath('external'));
-addpath('external\vlfeat-0.9.19\toolbox\mex\mexw64');
+% addpath(genpath('external'));
+% addpath('external\vlfeat-0.9.19\toolbox\mex\mexw64');
 
 % Option parameters
 fprintf('- Initialize parameters \n');
