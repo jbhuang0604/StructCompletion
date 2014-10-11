@@ -67,8 +67,6 @@ fprintf('Synthesis took %6.3f seconds.\n', tSynthesis);
 % Return the top level 
 imgSyn = imgPyr{optS.topLevel}; 
   
-save('testBlend.mat', 'img', 'imgSyn', 'mask', 'maskD', 'optS');
-
 tic;    
 imgCompleteFinal = sc_poisson_blend(img, imgSyn, mask);
 tBlend = toc; 
