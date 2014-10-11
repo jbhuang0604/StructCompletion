@@ -13,9 +13,13 @@ nUpdateTotal = 0;
 uvPixActiveInd = true(1, numUvPix);
 iter = 1;
 while(iter <= optS.numRandSample)
+    % while(searchRad > 1)
     iter = iter + 1;
     % Reduce search radius by half
     searchRad = searchRad/2;
+    %     if(searchRad < 1)
+    %         break;
+    %     end
     
     uvTformCandCur = sc_uvMat_from_uvMap(NNF.uvTform.map, uvPix);
     
@@ -42,12 +46,9 @@ while(iter <= optS.numRandSample)
     uvValidSrcInd = sc_check_valid_uv(uvTformCand(7:8,:), NNF.validPix.mask);
     % Check if the cost is already low
     uvValidCostInd = NNF.uvCost.data > optS.rsThres;
-    % Check if the candiate sample is too close to the current ones
-%     diff = abs(uvTformCand(7:8,:) - uvTformCandCur(7:8,:));
-%     uvValidDistInd = ((diff(1,:) > 1 ) | (diff(2,:) > 1 ));
     
     uvValidInd = uvPixActiveInd & uvValidSrcInd & ...
-        uvValidCostInd & uvValidScaleInd;% & uvValidDistInd;
+        uvValidCostInd & uvValidScaleInd;
     
     uvPixActivePos = find(uvValidInd);
     numActPix = size(uvPixActivePos, 2);
@@ -59,7 +60,7 @@ while(iter <= optS.numRandSample)
         uvCostDataCur    = NNF.uvCost.data(:,uvValidInd);
         uvTformCandCur   = uvTformCand(:, uvValidInd);
         uvPlaneIDCandCur = uvPlaneIDCand(uvValidInd);
-
+        
         uvPixValid.sub = uvPix.sub(:,uvValidInd);
         uvPixValid.ind = uvPix.ind(uvValidInd);
         
@@ -68,10 +69,10 @@ while(iter <= optS.numRandSample)
         % Grab source patches
         srcPatch = sc_prep_source_patch(img, uvTformCandCur, optS);
         
-        [costPatchCand, uvBiasCand] = ...
+        [costPatchCandAll, uvBiasCand] = ...
             sc_patch_cost(trgPatchCur, srcPatch, wDistPatchCur, modelPlane, uvPlaneIDCandCur, ...
             uvPixValid.sub, uvTformCandCur(7:8,:), uvDtBdPixPosCur, zeros(1, numActPix), imgSize, optS, iLvl);
-
+        costPatchCand = sum(costPatchCandAll, 1);
         % Check which one to update
         updateInd = (costPatchCand < uvCostDataCur);
         nUpdate = sum(updateInd);
@@ -92,10 +93,10 @@ while(iter <= optS.numRandSample)
             end
             NNF.update.data(uvPixActivePos) = 2;
             
-            % 
+            %
             NNF.uvPixUpdateSrc.data(uvPixActivePos) = 2;
-
-            % === Update NNF map === 
+            
+            % === Update NNF map ===
             NNF.uvTform.map = sc_update_uvMap(NNF.uvTform.map, uvTformCandCur(:,updateInd), uvPixValid, updateInd);
             NNF.uvPlaneID.map = sc_update_uvMap(NNF.uvPlaneID.map, uvPlaneIDCandCur(updateInd), uvPixValid, updateInd);
             NNF.uvCost.map  = sc_update_uvMap(NNF.uvCost.map, costPatchCand(updateInd), uvPixValid, updateInd);

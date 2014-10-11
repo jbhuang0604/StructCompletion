@@ -18,9 +18,10 @@ while(iter <= optS.numRegSample)
     
     % Draw plane ID candidate
     uvPlaneIDCand = sc_draw_plane_id(NNF.uvPlaneID.planeProbAcc);
+    
     % Estimate the domain transformation
     uvTformCand = sc_src_domain_tform(uvPlaneIDCand, modelPlane, modelReg, [], NNF.uvPix.sub, 0);
-
+    
     % === Reject invalid samples ===
     % Check if the scale of the source patch is valid
     uvTformScale = sc_scale_tform(uvTformCand);
@@ -29,12 +30,12 @@ while(iter <= optS.numRegSample)
     uvValidSrcInd = sc_check_valid_uv(uvTformCand(7:8,:), NNF.validPix.mask);
     % Check if the cost is high
     uvValidCostInd = NNF.uvCost.data > optS.rsThres;
-
+    
     uvValidInd = uvPixActiveInd& uvValidSrcInd & uvValidCostInd & uvValidScaleInd;
     
     uvPixActivePos = find(uvValidInd);
     numActPix = size(uvPixActivePos, 2);
-        
+    
     if(numActPix~=0)
         % Update
         uvTformCandCur = uvTformCand(:, uvValidInd);
@@ -53,10 +54,11 @@ while(iter <= optS.numRegSample)
         srcPatch = sc_prep_source_patch(img, uvTformCandCur, optS);
         
         % Compute patch matching cost
-        [costPatchCand, uvBiasCand] = ...
+        [costPatchCandAll, uvBiasCand] = ...
             sc_patch_cost(trgPatchCur, srcPatch, wDistPatchCur, modelPlane, uvPlaneIDCandCur, ...
             uvPixValid.sub, uvTformCandCur(7:8,:), uvDtBdPixPosCur, ones(1, numActPix), imgSize, optS, iLvl);
-                
+        costPatchCand = sum(costPatchCandAll, 1);
+        
         % Check which one to update
         updateInd = (costPatchCand < uvCostDataCur);
         nUpdate = sum(updateInd);
@@ -76,9 +78,9 @@ while(iter <= optS.numRegSample)
                 NNF.uvBias.data(:,uvPixActivePos)   = uvBiasCand(:,updateInd);
             end
             NNF.update.data(uvPixActivePos) = 1;
-
+            
             % Labeled as regularity-guided samples
-            NNF.uvPixUpdateSrc.data(uvPixActivePos) = 1;    
+            NNF.uvPixUpdateSrc.data(uvPixActivePos) = 1;
             
             % === Update NNF map ===
             NNF.uvTform.map = sc_update_uvMap(NNF.uvTform.map, uvTformCandCur(:,updateInd), uvPixValid, updateInd);

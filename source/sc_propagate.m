@@ -67,10 +67,11 @@ while(numUpdatePix ~= 0)
         srcPatch = sc_prep_source_patch(img, uvTformCand, optS);
         
         % Compute patch matching cost
-        [costPatchCand, uvBiasCand] = ...
+        [costPatchCandAll, uvBiasCand] = ...
             sc_patch_cost(trgPatchCur, srcPatch, wDistPatchCur, modelPlane, uvPlaneIDCand, ...
             uvPixValid.sub, uvTformCand(7:8,:), uvDtBdPixPosCur, zeros(1, numUvValid), imgSize, optS, iLvl);
-        
+        costPatchCand = sum(costPatchCandAll, 1);
+
         % Check which one to update
         updateInd = costPatchCand < uvCostCur;
         

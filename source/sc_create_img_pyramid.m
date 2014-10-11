@@ -1,18 +1,18 @@
 function [imgPyr, maskPyr, scaleImgPyr] = sc_create_img_pyramid(img, mask, optS)
 
 % SC_CREAT_IMG_PYRAMID
-% 
+%
 % Create image pyramid with linear or log scale for coarse to fine image
 % completion
-% 
-% Input: 
+%
+% Input:
 %   - img:  Image with hole
 %   - mask: Hole mask
 %   - optS: options
-% Output:  
+% Output:
 %   - imgPyr:      Image pyramid
 %   - maskPyr:     Mask pyramid
-%   - scaleImgPyr: Image dimensions in each level 
+%   - scaleImgPyr: Image dimensions in each level
 
 % Image size in the high-resolution image
 [imgHeight, imgWidth, nCh] = size(img);
@@ -37,7 +37,7 @@ imgPyr  = cell(optS.numPyrLvl, 1);
 maskPyr = cell(optS.numPyrLvl, 1);
 scaleImgPyr = cell(optS.numPyrLvl, 1);
 
-% Finest level
+% Finest level (high-resolution image)
 imgPyr{1} = img;
 maskPyr{1} = logical(mask);
 scaleImgPyr{1}.imgScale = 1;
@@ -54,16 +54,16 @@ end
 
 % Get the inital solution
 [~, idMap] = bwdist(~maskPyr{optS.numPyrLvl}, 'euclidean');
- 
+
 % Intepolate only in the interior to avoid dark values near the image
 % borders
 maskInt = maskPyr{optS.numPyrLvl};
 maskInt(1,:) = 0;   maskInt(end,:) = 0;
 maskInt(:,1) = 0;   maskInt(:,end) = 0;
- 
+
 for ch = 1: 3
     imgCh = imgPyr{optS.numPyrLvl}(:,:,ch);
-    imgCh = imgCh(idMap); 
+    imgCh = imgCh(idMap);
     imgPyr{optS.numPyrLvl}(:,:,ch) = roifill(imgCh, maskInt);
 end
 

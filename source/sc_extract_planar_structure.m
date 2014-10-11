@@ -1,4 +1,4 @@
-function [img, mask, modelPlane, modelReg] = sc_extract_planar_structure(imgFileName, optA)
+function [img, mask, maskD, modelPlane, modelReg] = sc_extract_planar_structure(imgFileName, optA)
 
 % SC_EXTRACT_PLANAR_STRUCTURE
 % 
@@ -19,15 +19,17 @@ function [img, mask, modelPlane, modelReg] = sc_extract_planar_structure(imgFile
 modelPlane.numPlane = 1;
 modelPlane.plane{1}.vLine = [0 0];
 
-% Read image and hole mask
+% Read image and hole mask 
 [img, ~, alpha] = imread(fullfile('data', imgFileName));
 mask = alpha ~= 255;
 img  = im2double(img);
 
+maskD = imdilate(mask, strel('diamond',1));
+
 % Extract planar constructural constraints
-modelPlane = sc_extract_plane(imgFileName, img, mask, optA);
+modelPlane = sc_extract_plane(imgFileName, img, maskD, optA);
 
 % Extract regularity constraints
-modelReg = sc_extract_regularity(img, mask, modelPlane, optA);
+modelReg = sc_extract_regularity(img, maskD, modelPlane, optA);
 
 end
