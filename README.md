@@ -17,9 +17,7 @@ Example:
 
 imgFileName = '005_input_hole.png';
 
-[optA, optS] = sc_init_opt;
-
-imgCompletion = sc_complete(imgFileName, optA, optS);
+imgCompletion = sc_complete(imgFileName);
 
 There are three main directories:
 
