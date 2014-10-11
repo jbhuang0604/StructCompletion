@@ -9,7 +9,7 @@ Jia-Bin Huang, Sing Bing Kang, Narendra Ahuja, and Johannes Kopf,
 Image Completion using Planar Structure Guidance,
 ACM Transactions on Graphics (Proceedings of SIGGRAPH 2014), 33(4), 2014
 
-It is provided for educational/researrch purpose only. Please cite our paper if you found the software useful for your work.
+It is provided for educational/research purpose only. Please cite our paper if you found the software useful for your work.
 
 To run the code, please see use main function sc_complete.m
  
