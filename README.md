@@ -47,5 +47,7 @@ Contact
 ===
 
 Jia-Bin Huang
+
 jbhuang1@illinois.edu
+
 www.jiabinhuang.com
