@@ -11,13 +11,19 @@ ACM Transactions on Graphics (Proceedings of SIGGRAPH 2014), 33(4), 2014
 
 It is provided for educational/research purpose only. Please cite our paper if you found the software useful for your work.
 
-To run the code, please see use main function sc_complete.m
+To run the code, please use the main function sc_complete.m.
  
-Example:
+===
+Example
+===
 
 imgFileName = '005_input_hole.png';
 
 imgCompletion = sc_complete(imgFileName);
+
+===
+Content
+===
 
 There are three main directories:
 
@@ -35,3 +41,11 @@ http://www.vlfeat.org/
 
 3. mirt2D_mexinterp: Fast 2D linear interpolation
 http://www.mathworks.com/matlabcentral/fileexchange/24183-2d-interpolation/content/mirt2D_mexinterp/mirt2D_mexinterp.m
+
+===
+Contact 
+===
+
+Jia-Bin Huang
+jbhuang1@illinois.edu
+www.jiabinhuang.com
