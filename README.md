@@ -34,16 +34,13 @@ There are three main directories:
 - external: external codes
 
 1. MeanShift: the Mean-shift clustering algorithm
-2. 
 http://www.mathworks.com/matlabcentral/fileexchange/10161-mean-shift-clustering
 
 2. vlfeat-0.9.19: for feature detection and matching
 http://www.vlfeat.org/
-
-Please download the code and unzip it to the 'external' folder
+Please download the vlfeat library and unzip it to the 'external' folder
 
 3. mirt2D_mexinterp: Fast 2D linear interpolation
-
 http://www.mathworks.com/matlabcentral/fileexchange/24183-2d-interpolation/content/mirt2D_mexinterp/mirt2D_mexinterp.m
 
 ===
