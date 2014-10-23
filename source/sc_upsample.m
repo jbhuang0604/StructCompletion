@@ -61,7 +61,7 @@ uvPixL.ind = sub2ind([imgH_L, imgW_L], uvPixL.sub(2,:), uvPixL.sub(1,:));
 
 %% === Initialize uvPlaneID ===
 
-NNF_H.uvPlaneID.data = sc_uvMat_from_uvMap(NNF_L.uvPlaneID.map, uvPixL);
+NNF_H.uvPlaneID.data = sc_uvMat_from_uvMap(NNF_L.uvPlaneID.map, uvPixL); 
 NNF_H.uvPlaneID.data(NNF_H.uvPlaneID.data==0) = 1;
 NNF_H.uvPlaneID.map = zeros(NNF_H.imgH, NNF_H.imgW);
 NNF_H.uvPlaneID.map = sc_update_uvMap(NNF_H.uvPlaneID.map, NNF_H.uvPlaneID.data, NNF_H.uvPix, true(1,NNF_H.uvPix.numUvPix));

@@ -22,4 +22,6 @@ uvTformScale = (H(1,:) - H(7,:).*H(3,:)).* (H(5,:) - H(8,:).*H(6,:)) ...
 
 uvTformScale = abs(uvTformScale);
 
+uvTformScale = sqrt(uvTformScale);
+
 end

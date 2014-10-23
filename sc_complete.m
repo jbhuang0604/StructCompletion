@@ -31,8 +31,8 @@ function imgCompleteFinal = sc_complete(imgFileName)
 %   jbhuang0604@gmail.com 
     
 % % Load image
-% imgID = 3;  
-% imgFileName = [num2str(imgID, '%03d'), '_input_hole.png'];
+imgID = 3;
+imgFileName = [num2str(imgID, '%03d'), '_input_hole.png'];
 
 % Option parameters
 [optA, optS] = sc_init_opt;
