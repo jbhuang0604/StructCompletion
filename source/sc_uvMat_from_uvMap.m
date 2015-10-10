@@ -1,16 +1,23 @@
-function [uvMat] = sc_uvMat_from_uvMap(uvMap, uvPix)
+function uvMat = sc_uvMat_from_uvMap(map, uvPixInd)
 
 % Function: conver uvMap into matrix form
 
 % Extract uv transform from the NNF
-numUvPixels = size(uvPix.ind,2);
-[imgH, imgW, nCh] = size(uvMap);
+[imgH, imgW, nCh] = size(map);
 
-uvMat = zeros(nCh, numUvPixels, 'single');
+offset = uint32((0:nCh-1)*imgH*imgW);
+uvPixInd = bsxfun(@plus, uvPixInd, offset);
+uvMat = map(uvPixInd);
 
-for i = 1: nCh
-    uvMat(i,:) = uvMap(uvPix.ind + (i-1)*imgH*imgW);
-end
+% map(uvPixInd) = data;
+% 
+% 
+% 
+% uvMat = zeros(nCh, numUvPixels, 'single');
+% 
+% for i = 1: nCh
+%     uvMat(i,:) = map(uvPix.ind + (i-1)*imgH*imgW);
+% end
 
 % Indices of valid uv pixels
 % uvValid.ind = uvMapMask(uvPix.ind);

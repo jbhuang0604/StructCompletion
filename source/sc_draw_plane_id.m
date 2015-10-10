@@ -7,15 +7,15 @@ function uvPlaneIDData= sc_draw_plane_id(planeProbAccData)
 % Output:
 %   - uvPlaneIDData
 
-numUvPix = size(planeProbAccData, 2);
-numPlane = size(planeProbAccData, 1) - 1;
+numUvPix = size(planeProbAccData, 1);
+numPlane = size(planeProbAccData, 2) - 1;
 
-randSample = rand(1, numUvPix);
-uvPlaneIDData = zeros(1, numUvPix, 'uint8');
+randSample = rand(numUvPix, 1);
+uvPlaneIDData = zeros(numUvPix, 1, 'uint8');
 
 for indPlane = 1: numPlane
-    indSamplePlane = (planeProbAccData(indPlane,:) < randSample ) & ...
-        (planeProbAccData(indPlane + 1, :) >= randSample);
+    indSamplePlane = (planeProbAccData(:,indPlane) < randSample ) & ...
+        (planeProbAccData(:, indPlane + 1) >= randSample);
     uvPlaneIDData(indSamplePlane) = indPlane;
 end
 

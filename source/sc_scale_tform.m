@@ -17,11 +17,9 @@ function     uvTformScale = sc_scale_tform(H)
 
 % Here the scale estimation is the determinant of the matrix A
 
-uvTformScale = (H(1,:) - H(7,:).*H(3,:)).* (H(5,:) - H(8,:).*H(6,:)) ...
-    - (H(4,:) - H(7,:).*H(6,:)).*(H(2,:) - H(8,:).*H(3,:));
+uvTformScale = (H(:,1) - H(:,7).*H(:,3)).* (H(:,5) - H(:,8).*H(:,6)) ...
+    - (H(:,4) - H(:,7).*H(:,6)).*(H(:,2) - H(:,8).*H(:,3));
 
-uvTformScale = abs(uvTformScale);
-
-uvTformScale = sqrt(uvTformScale);
+uvTformScale = sqrt(abs(uvTformScale));
 
 end

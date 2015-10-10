@@ -1,18 +1,19 @@
 function uvValidInd = sc_check_valid_uv(srcPos, validSrcMask)
 
-uvSub = round(srcPos);
+% Rounding to the closest integer
+srcPos   = round(srcPos);
+numUvPix = size(srcPos, 1);
 
-% clamp
-uvSub(1,:) = sc_clamp(uvSub(1,:), 1, size(validSrcMask,2));
-uvSub(2,:) = sc_clamp(uvSub(2,:), 1, size(validSrcMask,1));
+% Initialize uvValidInd
+uvValidInd = false(numUvPix, 1);
 
-% uvSub = round(uvSub);
+% Check only valid 
+validSrcInd = (srcPos(:,1) >= 1) & (srcPos(:,1) <= size(validSrcMask,2)) ...
+    & (srcPos(:,2) >= 1) & (srcPos(:,2) <= size(validSrcMask,1));
 
-uvInd = sub2ind(size(validSrcMask), uvSub(2,:), uvSub(1,:));
+% uvValidInd
+uvInd = sub2ind(size(validSrcMask), srcPos(validSrcInd,2), srcPos(validSrcInd,1));
+uvValidInd(validSrcInd) = validSrcMask(uvInd);
 
-uvValidInd = validSrcMask(uvInd);
-
-% uvValid.ind(uvValid.ind) = uvValid.ind(uvValid.ind) & uvValidCand;
-% uvValid.pos = find(uvValid.ind);
 
 end

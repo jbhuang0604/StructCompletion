@@ -1,8 +1,6 @@
 function imgBlend = sc_poisson_blend(imgTrg, imgSrc, holeMask)
-
-% SC_POISSON_BLEND
-% 
-% Blend the source and target image using a simple discrete Poisson solver
+% SC_POISSON_BLEND: Blend the source and target image using a simple 
+% discrete Poisson solver
 %
 % Input:
 %   - imgTrg: original image with hole

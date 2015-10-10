@@ -4,7 +4,7 @@ mask = NNF.uvPix.mask;
 
 [imgH, imgW] = size(mask);
 
-bdMask = edge(mask);
+bdMask = bwperim(mask);
 bdMask = bdMask(:,:,ones(3,1));
 mask = mask(:,:,ones(3,1));
 
@@ -22,16 +22,16 @@ NNFVis.uvBiasMapVis(bdMask) = 1;
 
 %% uvPixUpdateSrc
 
-NNFVis.uvPixUpdateSrcMap = zeros(imgH, imgW, 3);
-for ch = 1:3
-    NNFVis.uvPixUpdateSrcMap(:,:,ch) = im2double(NNF.uvPixUpdateSrc.map == ch);
-end
+% NNFVis.uvPixUpdateSrcMap = zeros(imgH, imgW, 3);
+% for ch = 1:3
+%     NNFVis.uvPixUpdateSrcMap(:,:,ch) = im2double(NNF.uvPixUpdateSrc.map == ch);
+% end
 % NNFVis.uvGainMapVis = NNF.uvGain.map;
 % NNFVis.uvGainMapVis = NNFVis.uvGainMapVis - 0.5;
 % NNFVis.uvGainMapVis(bdMask) = 1;
 
 %% uvPlaneIDMapVis
-numPlane = size(NNF.uvPlaneID.planeProbAcc, 1) - 1;
+numPlane = size(NNF.uvPlaneID.planeProbAcc, 2) - 1;
 NNFVis.uvPlaneIDMapVis = zeros(imgH, imgW, 3);
 for i = numPlane:-1:1
     if(i == numPlane)

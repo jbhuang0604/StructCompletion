@@ -1,7 +1,7 @@
 function modelPlane = sc_extract_plane(imgName, img, mask, optA)
 
 % SC_EXTRACT_PLANE:
-% 
+%
 % Extract plane model from an image
 %
 % Output: modelPlane
@@ -25,7 +25,7 @@ vpFilePath = 'cache\vpdetection';
 vpFileName  = [imgName(1:end-4), '-vanishingpoints.txt'];
 
 if(~exist(fullfile(vpFilePath, 'text', vpFileName), 'file'))
-    vpExeFile = 'vpdetection.exe';
+    vpExeFile = fullfile('source', 'vpdetection.exe');
     vpDetectCMD = [vpExeFile, ' -indir ', imgPath, ' -infile ', imgName, ' -outdir ', vpFilePath];
     system(vpDetectCMD);
 end
@@ -151,12 +151,7 @@ for i = 1: vpData.numVP - 1
         modelPlane.plane{indPlane}.vLine = vLineFromTwoVP(vpData.vp{i}.pos, vpData.vp{j}.pos);
         % Element-wise product of two support line density
         modelPlane.plane{indPlane}.imgPlaneProb = modelPlane.vp{i}.imgLinesPosMap.*modelPlane.vp{j}.imgLinesPosMap; % Product of two probability maps
-        
-        %
-        %         modelPlane.plane{indPlane}.imgPlaneProb(mask) = 0;
         modelPlane.plane{indPlane}.score = sum(modelPlane.plane{indPlane}.imgPlaneProb(:));
-        
-        %         modelPlane.plane{indPlane}.imgPlaneProb(mask) = 1e-10;
         modelPlane.plane{indPlane}.sourceVP = [i, j];
         
         indPlane = indPlane + 1;
@@ -221,9 +216,7 @@ end
 
 modelPlane.plane{indPlane}.vLine = [0 0 1];
 modelPlane.plane{indPlane}.imgPlaneProb = optA.fpPlaneProb*ones(imgH, imgW);
-% modelPlane.plane{indPlane}.imgPlaneProb(mask) = 0;
 modelPlane.plane{indPlane}.score = sum(modelPlane.plane{indPlane}.imgPlaneProb(:));
-% modelPlane.plane{indPlane}.imgPlaneProb(mask) = 0;
 modelPlane.plane{indPlane}.rotPar(1) = 0;
 modelPlane.plane{indPlane}.rotPar(2) = 0;
 
@@ -244,7 +237,7 @@ modelPlane.postProbHole = planeProb;
 
 % === Propagate posterior probability into the hole region ===
 
-    % Get border pixels
+% Get border pixels
 %     borderImg = im2double(mask);
 %     borderImg = imfilter(borderImg, fspecial('gaussian'));
 %     borderImg = (borderImg~=0) & (borderImg~=1);
@@ -266,10 +259,6 @@ planeProb = (planeProb)./repmat(planeProbSum, [1, 1, numPlane]);
 
 planeProbSum = 1 + numPlane*optA.probConst;
 planeProb = (planeProb + optA.probConst)/planeProbSum;
-
-% planeProb(:,:,2) = roifill(planeProb(:,:,2), mask);
-% roifill(planeProb(:,:,3), mask);
-% roifill(planeProb(:,:,4), mask);
 
 if(0)
     

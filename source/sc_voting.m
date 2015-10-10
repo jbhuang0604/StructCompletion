@@ -1,44 +1,49 @@
-function img = sc_voting(img, NNF, uvPix, holeMask, wDistPatch, wDistImg, optS)
+function img = sc_voting(img, NNF, holeMask, optS)
 
 % SC_VOTING: update the image using NNF
 %
-% Input: 
-%   - wDistPatch
-%   - img
-%   - NNF
-%   - uvPix
-%   - holeMask
-%   - wDistImg, optS
+% Input:
+%   - img:      input image at the current level
+%   - NNF       nearest neighbor field
+%   - holeMask  hole mask
+%   - optS      parameters
 % Output:
 %   - img
 
+numUvPix = NNF.uvPix.numPix;
 [imgH, imgW, nCh] = size(img);
 
 % Prepare source patch
-numUvPix = size(uvPix.ind, 2);
-uvValid.ind = true(1, numUvPix);    uvValid.pos = 1:numUvPix;
 srcPatch = sc_prep_source_patch(img, NNF.uvTform.data, optS);
 
-% Apply bias correction
+% Update NNF data
 if(optS.useBiasCorrection)
-    biasPatch = reshape(NNF.uvBias.data, 1, nCh, numUvPix);
+    biasPatch = NNF.uvBias.data;
     srcPatch = bsxfun(@plus, srcPatch, biasPatch);
 end
-% Weight by distance to the hole border
-wDistPatchC = reshape(wDistPatch(optS.pMidPix, :), 1, 1, numUvPix);
-srcPatch = bsxfun(@times, srcPatch, wDistPatchC);
+
+% Target patch index
+trgPatchInd = NNF.trgPatchInd;
+
+% Weight by distance to the closest known pixel
+wPatchR  = reshape(NNF.wPatchR, optS.pNumPix, 1, numUvPix);
+srcPatch = bsxfun(@times, srcPatch, wPatchR);
 
 % Compute weighted average from source patches
 srcPatch = reshape(srcPatch, optS.pNumPix*nCh, numUvPix);
-imgAcc = zeros(imgH, imgW, 3, 'single');
-for i = 1:numUvPix
-    imgAcc(NNF.trgPatchInd(:,i)) = imgAcc(NNF.trgPatchInd(:,i)) + srcPatch(:,i);
-end
-imgAcc = imgAcc./wDistImg(:,:,ones(1,1,nCh));
 
-% Merge with known regions
-holeMask = holeMask(:,:,ones(1,1,nCh));
+% Initialization
+imgAcc    = zeros(imgH, imgW, nCh, 'single');
+for i = 1 : numUvPix
+    imgAcc(trgPatchInd(:,i)) = imgAcc(trgPatchInd(:,i)) + srcPatch(:,i);
+end
+imgAcc = bsxfun(@rdivide, imgAcc, NNF.wPatchSumImg);
+
+% Merge with known region
+% uvMask = NNF.uvPix.mask(:,:,ones(nCh,1));
+holeMask = holeMask(:,:,ones(nCh,1));
 img(holeMask) = imgAcc(holeMask);
+img = sc_clamp(img, 0, 1);
 
 end
 

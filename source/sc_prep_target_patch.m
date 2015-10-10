@@ -1,32 +1,31 @@
 function trgPatch = sc_prep_target_patch(img, uvPixSub, optS)
-
-% SC_PREP_TARGET_PATCH
-%
-% Prepare target patches with centers uvPixSub
+% SC_PREP_TARGET_PATCH: Prepare target patches with centers uvPixSub
 %
 % Input:
-%   - img
-%   - uvPixSub 
-%   - optS
+%   - img:       input image
+%   - uvPixSub:  target patch position
+%   - optS:      parameter
 % Output:
-%   - trgPatch
+%   - trgPatch: [pNumPix] x [3] x [numUvPix]
 
 [imgH, imgW, nCh] = size(img);
 
 % Updated target patch extraction
-numUvPix = size(uvPixSub, 2);
+numUvPix = size(uvPixSub, 1);
 
 % Prepare target patch position
-refPatchPos = reshape(optS.refPatchPos(1:2,:)', optS.pNumPix, 2, 1);
-trgPatchCenter = reshape(uvPixSub, 1, 2, numUvPix);
-trgPatchPos = bsxfun(@plus, refPatchPos, trgPatchCenter);
+uvPixSub    = reshape(uvPixSub', [1, 2, numUvPix]);
+trgPatchPos = bsxfun(@plus, optS.refPatchPos(:,1:2), uvPixSub);
 
 % Sample target patch
-img = im2double(img);
-trgPatchPos = im2double(trgPatchPos);
-trgPatch = mirt2D_mexinterp(img, trgPatchPos(:, 1, :), trgPatchPos(:, 2, :));
-if(size(trgPatch, 3) > 1)
-    trgPatch = permute(trgPatch, [1, 3, 2]);
+trgPatchInd = zeros(optS.pNumPix, nCh, numUvPix, 'single');
+for i = 1: nCh
+    trgPatchInd(:, i, :) = sub2ind([imgH, imgW, nCh], ...
+        trgPatchPos(:,2,:), trgPatchPos(:,1,:), ...
+        i*ones(optS.pNumPix, 1, numUvPix, 'single'));
 end
+
+% Get target patch via indexing
+trgPatch = img(trgPatchInd);
 
 end
