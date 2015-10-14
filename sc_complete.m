@@ -24,6 +24,7 @@ function imgCompleteFinal = sc_complete(imgFileName)
 %   Jia-Bin Huang
 %   University of Illinois, Urbana-Champaign
 %   www.jiabinhuang.com
+<<<<<<< HEAD
 %   jbhuang0604@gmail.com
 
 % Set up required path
@@ -32,6 +33,13 @@ startup;
 % Load image
 imgID = 9;
 imgFileName = [num2str(imgID, '%03d'), '_input_hole.png'];
+=======
+%   jbhuang0604@gmail.com 
+    
+% % Load image
+% imgID = 3;
+% imgFileName = [num2str(imgID, '%03d'), '_input_hole.png'];
+>>>>>>> 80fe71bd858652004119dc8946439915385cc282
 
 imgFileName = 'test.png';
 
