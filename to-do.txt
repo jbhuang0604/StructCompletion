@@ -1,0 +1,19 @@
+[] Upsampling
+- take care of the bias correction
+- 
+
+[] Add spatial coherence cost
+
+
+[OK] Change interp2 to VGG
+
+
+[OK] Convert to column major
+- 
+
+[OK] Patch voting weights
+- 
+
+[OK] Change the mask for the hierarchical image completion
+- only complete those are required 
+- check video completion
